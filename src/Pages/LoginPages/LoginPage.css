@@ -1,0 +1,17 @@
+.login-page .greeting{
+    color: white;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.login-page .form-title{
+    color: #FF0063;
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.login-page .form-label{
+    color: #FF0063;
+    font-size: 15px;
+    font-weight: 700;
+}
