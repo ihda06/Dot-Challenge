@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
 import { Card, Row, Col, Container, Form, Button } from "react-bootstrap"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { loged } from "../../Redux/loginSlice"
-// import { loged } from "../../Redux/loginSlice"
 import illustration from "./Enthusiastic-pana.svg"
 import "./LoginPage.css"
 
@@ -13,8 +12,6 @@ const LoginPage = () => {
         username: "",
         password:""
     })
-
-    const status = useSelector(state=>state.status)
 
     const handleChange = (e)=>{
         const {name, value} = e.target
@@ -28,12 +25,12 @@ const LoginPage = () => {
         e.preventDefault()
         if(login.username === "ihda.anwari" && login.password === "a"){
             dispatch(loged())
-            console.log("masuk if")
+         
         }
         else{
             alert("pasword or username not match")
         }
-        // console.log("hellow")
+        
     }
 
     useEffect(()=>{
@@ -46,7 +43,7 @@ const LoginPage = () => {
                 <Row className="border border-2" style={{ height: "540px" }}>
                     <Col lg={6} className="d-flex align-items-center justify-content-center" style={{ backgroundColor: "#66BFBF" }}>
                         <div className="text-center py-5">
-                            <img src={illustration} style={{ width: "250px", maxWidth: "695px" }} />
+                            <img alt="tes" src={illustration} style={{ width: "250px", maxWidth: "695px" }} />
                             <Card.Title className="greeting">
                                 Welcome Back!
                             </Card.Title>

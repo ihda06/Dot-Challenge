@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     isPlay: false,
     totalQuiz: 0,
-    score: []
+    score: 0
 }
 
 export const statusSlice = createSlice({
@@ -16,8 +16,8 @@ export const statusSlice = createSlice({
         addQuiz: (state)=>{
             state.totalQuiz = state.totalQuiz+1
         },
-        addScore: (state)=>{
-            state.totalQuiz = state.totalQuiz+1
+        addScore: (state, action)=>{
+            state.score = action.payload
         }
     }
 })

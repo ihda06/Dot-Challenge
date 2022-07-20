@@ -1,16 +1,26 @@
 import axios from "axios";
-import {useNavigate} from "react-router-dom"
-import { useState, useEffect } from "react";
+import he from "he"
+import { useState, } from "react";
 import { Button, Card, Container, Form } from "react-bootstrap"
-import { useDispatch } from "react-redux";
-import { addData, fetchQuestion, questionsLoading, questionsReceived } from "../../Redux/questionSlice";
 
-export const SettingCard = () => {
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
+
+
+export const SettingCard = ({setListQuestion}) => {
+    // const navigate = useNavigate()
     const [question, setQuestion] = useState([])
 
+    const convertData = (data)=>{
+        let newData = {...data}
+        const res = newData.results.map((item)=>{
+            item.question = he.decode(item.question)
+            item.correct_answer = he.decode(item.correct_answer)
+            item.incorrect_answers = item.incorrect_answers.map((question)=>(he.decode(question)))
+            return item
+        })
 
+        return {...newData, results: res}
+        
+    }
 
     const getQuestion = async (category, difficulty) => {
         const difficultyOp = ["easy", "medium", "hard"]
@@ -18,7 +28,7 @@ export const SettingCard = () => {
         let difficulty1 = difficulty
         if(category === "any"){
             category1 = Math.floor( Math.random() * (32 - 9) + 9);
-            console.log(category1);
+            // console.log(category1);
         }
         if(difficulty === "any"){
             let index = Math.floor(Math.random() * (3 - 0) + 0)
@@ -36,17 +46,55 @@ export const SettingCard = () => {
         return res.data
     }
 
+    const processQuestion = (item) => {
+        const data = { ...item }
+        // console.log(data);
+        const correct = {
+            ans: data.correct_answer,
+            isCorrect: true,
+            isSelected: false,
+        }
+        const incorrect = data.incorrect_answers.map((item) => {
+            const q = {
+                ans: item,
+                isCorrect: false,
+                isSelected: false,
+            }
+            return q
+        })
+        // console.log(incorrect);
+        // randoming position
+        let rand = Math.floor(Math.random() * 4)
+
+        const list = [...incorrect]
+        list.splice(rand, 0, correct)
+        return list
+
+        // console.log(incorrect);
+
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log("tes1")
+        
         const category = e.target["trivia_category"].value
         const difficult = e.target["difficulty"].value
         
-        const data = await getQuestion(category, difficult)
+        let data = await getQuestion(category, difficult)
+        while (data.response_code === 1){
+            data = await getQuestion(category, difficult)
+        }
+        // let newQuestiion = 
+        data = convertData(data)
+        data.results = data.results.map((item)=>{
+            const listAns = processQuestion(item)
+            item["newAns"] = listAns
+            return item
+        })
+        setListQuestion(data)
         setQuestion(data.results)
-        console.log(data.results)
-        dispatch(addData(data))
-        navigate("/landingpage/play")
+        // dispatch(addData(data))
+        // navigate("/landingpage/play")
 
     }
 
